@@ -1,0 +1,40 @@
+function pageLoadAnimations() {
+  setTimeout(() => {
+    const text = new SplitType("#heading", { types: "lines, chars" });
+
+    text.lines.forEach((line) => {
+      line.classList.add("full-height-line");
+    });
+
+    gsap.set("#heading", { autoAlpha: 1 });
+    gsap.set(text.chars, { yPercent: 20, opacity: 0 }); // Reduced from 50 to 20 for smoother movement
+    gsap.set(".hero_wrap", { autoAlpha: 1 });
+
+    let tl = gsap.timeline();
+    let isMobile = window.innerWidth < 768; // Detect mobile
+
+    text.lines.forEach((line) => {
+      let chars = line.querySelectorAll(".char");
+
+      tl.to(
+        chars,
+        {
+          yPercent: 0,
+          opacity: 1,
+          ease: "power2.out",
+          stagger: { from: "center", each: isMobile ? 0.075 : 0.0375 }, // Reduced stagger by 25%
+          duration: isMobile ? 0.5 : 0.3, // Smoother effect on mobile
+        },
+        "<0.2"
+      );
+    });
+
+    tl.to(document.querySelectorAll(".superscript .char"), {
+      yPercent: 0,
+      opacity: 1,
+      ease: "power2.out",
+      stagger: { from: "center", each: isMobile ? 0.075 : 0.0375 }, // Match stagger timing
+      duration: isMobile ? 0.6 : 0.5,
+    });
+  }, 300); // Delayed start by 300ms
+}
